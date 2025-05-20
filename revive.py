@@ -3,22 +3,37 @@ from tkinter import Pack
 import yfinance as yf
 import pandas as pd
 import numpy as np
+from numpy.f2py.auxfuncs import throw_error
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import customtkinter as CTk
+from datetime import datetime, timedelta
 
 # Create main application window
 root = CTk.CTk()
 root.title('Anal Rider')
 root.geometry("800x600")
 
+
+def open_graph_window():
+    slave = CTk.CTkToplevel()
+    slave.title('Graph')
+    slave.geometry("800x600")
+    back_btn = CTk.CTkButton(slave, text="Back", command=slave.destroy)
+    back_btn.pack(pady=10)
+
 # Step 1: Define the data analysis function
 def analyze_stock_data():
-    ticker = "AAPL"
-    data = yf.download(ticker, start="2015-01-01", end="2023-01-01")
+    ticker = ticker_entry.get()
+    if not ticker_entry.get():
+        throw_error("requires ticker symbol")
+    else:
+        start_date = start_entry.get()
+        end_date = end_entry.get()
+    data = yf.download(ticker, start=start_date, end=end_date)
     data = data[['Close']]  # Use 'Close' price for simplicity
 
     # Data Preprocessing
@@ -58,6 +73,7 @@ def analyze_stock_data():
     ax.legend()
 
     # Embed the plot in the customtkinter frame
+
     canvas = FigureCanvasTkAgg(fig, master=graph_frame)  # Embed figure in `graph_frame`
     canvas.draw()
     canvas.get_tk_widget().pack(fill="both", expand=True)
@@ -65,13 +81,43 @@ def analyze_stock_data():
 # Create main frame and graph frame
 main_frame = CTk.CTkFrame(root)
 main_frame.pack(pady=20, padx=20, fill="both", expand=True)
-
-graph_frame = CTk.CTkFrame(main_frame)
-graph_frame.pack(fill="both", expand=True, pady=10)
-
-# Add an analyze button to trigger stock analysis
 analyze_button = CTk.CTkButton(main_frame, text="Analyze Stock Data", command=analyze_stock_data)
 analyze_button.pack(pady=10)
+
+graph_frame = CTk.CTkFrame(root)
+graph_frame.pack(fill="both", expand=True, pady=10)
+clear_button = CTk.CTkButton(main_frame, text="Clear Graph", command=lambda: main_frame.get_tk_widget().destroy())
+clear_button.pack(pady=10)
+# Step 2: Create a user interface for the application
+# Create input field for ticker symbol
+ticker_label = CTk.CTkLabel(main_frame, text="Enter Stock Ticker:")
+ticker_label.pack(pady=5)
+ticker_entry = CTk.CTkEntry(main_frame)
+ticker_entry.pack(pady=5)
+ticker_entry.insert(0, '')  # Fixed the f-string syntax error
+
+# Create date range inputs
+date_frame = CTk.CTkFrame(main_frame)
+date_frame.pack(pady=5)
+
+# Calculate default dates
+end_date = datetime.now()
+start_date = end_date - timedelta(days=365)  # Default to 1 year of data
+default_start = start_date.strftime("%Y-%m-%d")
+default_end = end_date.strftime("%Y-%m-%d")
+
+start_label = CTk.CTkLabel(date_frame, text="Start Date:")
+start_label.pack(side="left", padx=5)
+start_entry = CTk.CTkEntry(date_frame)
+start_entry.pack(side="left", padx=5)
+start_entry.insert(0, default_start)
+
+end_label = CTk.CTkLabel(date_frame, text="End Date:")
+end_label.pack(side="left", padx=5)
+end_entry = CTk.CTkEntry(date_frame)
+end_entry.pack(side="left", padx=5)
+end_entry.insert(0, default_end)
+
 
 # Run the main application loop
 root.mainloop()
