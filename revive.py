@@ -1,9 +1,8 @@
+#!/usr/bin/env python3.12
 # Import necessary libraries
-from tkinter import Pack
 import yfinance as yf
 import pandas as pd
 import numpy as np
-from numpy.f2py.auxfuncs import throw_error
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -29,7 +28,7 @@ def open_graph_window():
 def analyze_stock_data():
     ticker = ticker_entry.get()
     if not ticker_entry.get():
-        throw_error("requires ticker symbol")
+        raise ValueError("requires ticker symbol")
     else:
         start_date = start_entry.get()
         end_date = end_entry.get()
@@ -86,7 +85,7 @@ analyze_button.pack(pady=10)
 
 graph_frame = CTk.CTkFrame(root)
 graph_frame.pack(fill="both", expand=True, pady=10)
-clear_button = CTk.CTkButton(main_frame, text="Clear Graph", command=lambda: main_frame.get_tk_widget().destroy())
+clear_button = CTk.CTkButton(main_frame, text="Clear Graph", command=lambda: graph_frame.winfo_children()[0].destroy())
 clear_button.pack(pady=10)
 # Step 2: Create a user interface for the application
 # Create input field for ticker symbol
