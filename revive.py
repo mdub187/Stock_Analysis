@@ -1,3 +1,5 @@
+# revive.py
+#
 from __imports__ import CTk, LnR, fcta, timedelta, datetime, plt, yf, mpf, mse, tts
 def run_main_app():
     root = CTk.CTk()
