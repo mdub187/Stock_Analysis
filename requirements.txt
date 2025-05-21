@@ -3,3 +3,5 @@ future~=1.0.0
 yfinance~=0.2.61
 matplotlib~=3.10.0
 scikit-learn~=1.6.1
+mplfinance~=0.12.10b0
+bcrypt~=4.2.0
