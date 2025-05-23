@@ -5,7 +5,8 @@ __pycache__/
 upgrade/*
 # C extensions
 *.so
-
+ignore.py
+qodana.yaml
 # Distribution / packaging
 .Python
 build/
