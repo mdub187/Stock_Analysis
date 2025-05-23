@@ -6,7 +6,7 @@ WORKDIR ./.venv/bin/python3.13
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy in the source code
-COPY ./upgrade/main.py ./
+COPY /upgrade/main.py ./.github/workflows
 EXPOSE 5000
 
 # Setup an app user so the container doesn't run as the root user
